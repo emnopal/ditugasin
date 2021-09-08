@@ -1,9 +1,7 @@
-from django.contrib import messages
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
+from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render, redirect
 
-from django.urls import reverse_lazy
 from django.views import View
 
 from taskuserauth.forms import SignUpForm
