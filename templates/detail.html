@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+    <style>
+        body {
+            margin-top: 30px;
+        }
+    </style>
+    <body>
+    <div class="container">
+        <h1>Detail Task</h1>
+        <h6 style="text-align: left">{% now "D, d M Y H:i" %}</h6><br>
+
+        <div>
+            <a href="{% url 'task:index' %}" class="btn btn-success">Back to tasks list</a>
+        </div>
+
+        <br>
+
+        <div>
+            <h2>{{ Tasks.title }}</h2>
+
+            <h4>
+                Status:
+                {% if Tasks.status == 'todo' %}
+                    <span class="badge badge-primary">{{ Tasks.status }}</span>
+                {% elif Tasks.status == 'in_progress' %}
+                    <span class="badge badge-success">{{ Tasks.status }}</span>
+                {% elif Tasks.status == 'canceled' %}
+                    <span class="badge badge-danger">{{ Tasks.status }}</span>
+                {% elif Tasks.status == 'closed' %}
+                    <span class="badge badge-secondary">{{ Tasks.status }}</span>
+                {% endif %}
+            </h4>
+
+            <p>
+                Description: <br> {{ Tasks.description }}
+            </p>
+
+            <div>
+                <a href="{% url 'task:edit' Tasks.id %}" class="btn btn-primary btn-sm">Edit</a>
+                <a href="{% url 'task:delete' Tasks.id %}" class="btn btn-danger btn-sm">Delete</a>
+            </div>
+
+        </div>
+    </div>
+
+    </body>
+{% endblock %}
