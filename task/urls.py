@@ -7,6 +7,7 @@ from .views import (
     update_view,
     delete_view,
     to_csv,
+    search
 )
 
 app_name = 'task'
@@ -17,5 +18,5 @@ urlpatterns = [
     path('edit/<int:task_id>', update_view, name='edit'),
     path('delete/<int:task_id>', delete_view, name='delete'),
     path('to_csv/export.csv', to_csv, name='to_csv'),
-
+    path('search/', search, name='search'),
 ]

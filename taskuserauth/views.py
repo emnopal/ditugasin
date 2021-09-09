@@ -35,4 +35,3 @@ class RegisterView(View):
             return redirect('/')
 
         return render(request, self.template_name, {'form': form})
-

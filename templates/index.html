@@ -8,12 +8,16 @@
     </style>
     <body>
     <div class="container">
-        <h1>Tasks Lists</h1>
-        <h6 style="text-align: left">{% now "D, d M Y H:i" %}</h6> <br>
         <div>
             <a href="{% url 'logout' %}" class="float-right btn btn-outline-danger mt-1">Log out</a>
             <button class="float-right btn btn-outline-primary mt-1" style="margin-right: 5px;" disabled>Welcome, {{ user.username }}</button>
         </div>
+        <h1>Tasks Lists</h1>
+        <h6 style="text-align: left">{% now "D, d M Y H:i" %}</h6>
+        <form action="{% url 'task:search' %}" method="get">
+            <button class="float-right btn btn-primary mt-2" type="submit">Search</button>
+            <input class="float-right form-control mt-2 mr-sm-2" style="width: 200px;" name="search" type="search" placeholder="Search" aria-label="Search">
+        </form>
         <div>
             <a href="{% url 'task:create' %}" class="btn btn-success">Add</a>
             <a href="{% url 'task:to_csv' %}" class="btn btn-success">Save to CSV</a>

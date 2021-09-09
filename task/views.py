@@ -1,7 +1,9 @@
 from django.contrib import messages
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect
+from django.db.models import Q
 
 from .utils import download_csv
 from .models import Task
@@ -76,3 +78,14 @@ def to_csv(request):
     # Create the HttpResponse object with the appropriate CSV header.
     data = download_csv(request, Task.objects.all())
     return HttpResponse(data, content_type='text/csv')
+
+
+@login_required
+def search(request):
+    results = []
+    if request.method == "GET":
+        query = request.GET.get('search')
+        if query == '':
+            query = 'None'
+        results = Task.objects.filter(Q(title__icontains=query) | Q(description__icontains=query))
+    return render(request, 'search.html', {'query': query, 'results': results})
