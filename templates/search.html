@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    body {
+        margin-top: 30px;
+    }
+</style>
+<body>
+    <br/></br/>
+    <div class="container">
+        {% if query %}
+            <div>
+                <a href="{% url 'logout' %}" class="float-right btn btn-outline-danger mt-1">Log out</a>
+                <button class="float-right btn btn-outline-primary mt-1" style="margin-right: 5px;" disabled>Welcome, {{ user.username }}</button>
+            </div>
+            <h1>Results: {{ query }}</h1>
+            {% with results.count as total_results %}
+                <h6 style="text-align: left">Found {{ total_results }} result{{ total_results|pluralize }}</h6>
+            {% endwith %}
+            <form action="{% url 'task:search' %}" method="get">
+                <button class="float-right btn btn-primary mt-3" type="submit">Search</button>
+                <input class="float-right form-control mt-3 mr-sm-2" style="width: 200px;" name="search" type="search" placeholder="{{ query }}" aria-label="Test">
+            </form>
+            <div>
+                <a href="{% url 'task:index' %}" class="btn btn-success mt-2">Back to lists</a>
+            </div>
+            <br>
+
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th width="5%">No.</th>
+                    <th width="20%">Title</th>
+                    <th width="40%">Description</th>
+                    <th width="20%">Created at</th>
+                    <th width="15%">Action?</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for task in results %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>
+                                <a href="{% url 'task:detail' task.id %}">
+                                    {{ task.title }}
+                                </a>
+                                {% if task.status == 'todo' %}
+                                    <span class="badge badge-primary">{{ task.status }}</span>
+                                {% elif task.status == 'in_progress' %}
+                                    <span class="badge badge-success">{{ task.status }}</span>
+                                {% elif task.status == 'canceled' %}
+                                    <span class="badge badge-danger">{{ task.status }}</span>
+                                {% elif task.status == 'closed' %}
+                                    <span class="badge badge-secondary">{{ task.status }}</span>
+                                {% endif %}
+                            </td>
+                            {% if task.description|length > 50 %}
+                                <td>
+                                    <p style="max-width: 100%; max-height: 21px; overflow-y: hidden; text-overflow: ellipsis;">
+                                        {{ task.description }}
+                                    </p>
+                                    <a href="{% url 'task:detail' task.id %}">
+                                        Read More...
+                                    </a>
+                                </td>
+                            {% else %}
+                                <td>{{ task.description }}</td>
+                            {% endif %}
+                            <td>{{ task.created_at|date:"D, d M Y H:i" }}</td>
+                            <td>
+                                <a href="{% url 'task:edit' task.id %}" class="btn btn-primary btn-sm">Edit</a>
+                                <a href="{% url 'task:delete' task.id %}" class="btn btn-danger btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <h3>No results found.</h3>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
+    </div>
+</body>
+
+{% endblock %}
