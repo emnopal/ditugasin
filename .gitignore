@@ -1,3 +1,8 @@
 .idea
 __pycache__
 venv
+*.env
+.env
+migrations
+migrations/
+db.sqlite3
