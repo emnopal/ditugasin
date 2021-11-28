@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
 {% block content %}
     <style>
         body {
@@ -19,7 +22,7 @@
         <div>
             {% load widget_tweaks %}
 
-            <form method="post" novalidate>
+            <form method="post" class="container" action="" novalidate>
                 {% csrf_token %}
                 {% if form.non_field_errors %}
                     <div class="alert alert-danger" role="alert">
@@ -28,6 +31,7 @@
                         {% endfor %}
                     </div>
                 {% endif %}
+
 
                 {% for field in form.visible_fields %}
                     <div class="form-group">
@@ -60,6 +64,5 @@
             </form>
         </div>
     </div>
-
     </body>
 {% endblock %}

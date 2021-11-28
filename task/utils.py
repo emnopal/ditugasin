@@ -3,16 +3,17 @@ import csv
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 
+from datetime import datetime
+now = datetime.now()
+dt_string = now.strftime("%d%m%Y%H%M%S") # get current date and time
 
 def download_csv(request, queryset):
-    if not request.user.is_staff:
-        raise PermissionDenied
-
     model = queryset.model
     model_fields = model._meta.fields + model._meta.many_to_many
     field_names = [field.name for field in model_fields]
 
     response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = f'attachment; filename="{dt_string}.csv"'
 
     writer = csv.writer(response, delimiter=",")
     writer.writerow(field_names)
@@ -30,5 +31,4 @@ def download_csv(request, queryset):
             values.append(value)
         writer.writerow(values)
 
-    response['Content-Disposition'] = 'attachment; filename="export.csv"'
     return response

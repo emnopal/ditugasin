@@ -24,15 +24,28 @@
         </div>
 
         <br>
-
-        <table class="table table-bordered table-striped">
+        <div id='msg'>
+            {% if messages %}
+                <div class="row">
+                    <div class="col-sm-6 col-sm-offset-3">
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}" role="alert">
+                                <p>{{ message }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <table class="table table-bordered table-striped sortable">
             <thead>
             <tr>
-                <th width="5%">No.</th>
-                <th width="20%">Title</th>
-                <th width="40%">Description</th>
-                <th width="20%">Created at</th>
-                <th width="15%">Action?</th>
+                <th width="5%" style="text-align: center;">No.</th>
+                <th width="20%" style="text-align: center;">Title</th>
+                <th width="20%" style="text-align: center;">Description</th>
+                <th width="20%" style="text-align: center;">Due Date</th>
+                <th width="20%" style="text-align: center;">Created at</th>
+                <th width="15%" style="text-align: center;">Action?</th>
             </tr>
             </thead>
             <tbody>
@@ -45,13 +58,13 @@
                                 {{ task.title }}
                             </a>
                             {% if task.status == 'todo' %}
-                                <span class="badge badge-primary">{{ task.status }}</span>
+                                <span class="badge badge-primary"><a href="search/?search={{ task.status }}" style="color: white;">{{ task.status }}</a></span>
                             {% elif task.status == 'in_progress' %}
-                                <span class="badge badge-success">{{ task.status }}</span>
+                                <span class="badge badge-success"><a href="search/?search={{ task.status }}" style="color: white;">{{ task.status }}</a></span>
                             {% elif task.status == 'canceled' %}
-                                <span class="badge badge-danger">{{ task.status }}</span>
+                                <span class="badge badge-danger"><a href="search/?search={{ task.status }}" style="color: white;">{{ task.status }}</a></span>
                             {% elif task.status == 'closed' %}
-                                <span class="badge badge-secondary">{{ task.status }}</span>
+                                <span class="badge badge-secondary"><a href="search/?search={{ task.status }}" style="color: white;">{{ task.status }}</a></span>
                             {% endif %}
                         </td>
                         {% if task.description|length > 50 %}
@@ -65,6 +78,23 @@
                             </td>
                         {% else %}
                             <td>{{ task.description }}</td>
+                        {% endif %}
+                        {% if task.due_date is None %}
+                            <td> - </td>
+                        {% else %}
+                            {% if task.status != 'closed' %}
+                                <td>{{ task.due_date|date:"D, d M Y H:i" }}
+                                    {% if task.due_date|date:"D, d M Y H:i" >= now|date:"D, d M Y H:i" %}
+                                        <span class="badge badge-danger">Overdue</span>
+                                    {% endif %}
+                                </td>
+                            {% else %}
+                                <td>{{ task.due_date|date:"D, d M Y H:i" }}
+                                    {% if task.due_date|date:"D, d M Y H:i" >= now|date:"D, d M Y H:i" %}
+                                        <span class="badge badge-success">Finished</span>
+                                    {% endif %}
+                                </td>
+                            {% endif %}
                         {% endif %}
                         <td>{{ task.created_at|date:"D, d M Y H:i" }}</td>
                         <td>
@@ -81,6 +111,8 @@
             </tbody>
         </table>
     </div>
-
+    <script>
+        $("#msg").show().delay(2000).fadeOut();
+    </script>
     </body>
 {% endblock %}
